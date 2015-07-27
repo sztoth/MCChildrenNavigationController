@@ -4,7 +4,7 @@
 //
 
 #import "MCArrayDataSource.h"
-
+#import "MCTableViewCell.h"
 
 @interface MCArrayDataSource ()
 
@@ -50,9 +50,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:self.cellIdentifier];
+    MCTableViewCell *cell = (MCTableViewCell *)[tableView dequeueReusableCellWithIdentifier:self.cellIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:self.cellIdentifier];
+        cell = [[MCTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:self.cellIdentifier];
     }
     id item = [self itemAtIndexPath:indexPath];
     self.configureCellBlock(cell, item, indexPath);
