@@ -17,7 +17,7 @@ typedef void (^configureTableHeaderViewBlock)(MCTableHeaderViewButton *button, B
 
 @interface MCChildrenViewController : UIViewController <UITableViewDelegate>
 
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) id<MCChildrenCollection> node;
 @property (nonatomic, assign) NSInteger level;
 @property (nonatomic, assign) NSInteger index;

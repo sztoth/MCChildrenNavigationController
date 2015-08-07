@@ -18,18 +18,19 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    NSBundle *bundle = [NSBundle bundleForClass:[MCChildrenViewController class]];
+    self = [super initWithNibName:@"MCChildrenViewController" bundle:bundle];
     if (self) {
         _configureTableViewBlock = ^void(UITableView *tableView, id<MCChildrenCollection> node){};
         _configureTableViewCellBlock = ^void(UITableViewCell *cell){};
-        _configureTableHeaderViewBlock = ^void(MCTableHeaderViewButton *button, BOOL isSelected){};        
+        _configureTableHeaderViewBlock = ^void(MCTableHeaderViewButton *button, BOOL isSelected){};
     }
     return self;
 }
 
 - (id)initWithNode:(id<MCChildrenCollection>)aNode level:(NSInteger)aLevel index:(NSInteger)anIndex
 {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [self initWithNibName:nil bundle:nil];
     if (self) {
         _node = aNode;
         _level = aLevel;
@@ -42,9 +43,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self setupTableView];
     [self setupTableHeaderView];
+//    [self.view addSubview:self.tableView];
 
     [self setupNavigationItems];
 }
@@ -53,22 +54,22 @@
 {
     [super viewWillAppear:animated];
     
-    CGRect frame = self.view.frame;
-    frame.origin.x = 0.f;
-    self.view.frame = frame;
+//    CGRect frame = self.view.frame;
+//    frame.origin.x = 0.f;
+//    self.view.frame = frame;
     
     [self deselectRowInTableViewAnimated:animated];
 }
 
-- (void)viewDidLayoutSubviews
-{
-    [super viewDidLayoutSubviews];
-    
-    CGFloat valueX = CGRectGetMinY(self.view.frame) <= 0.f ? 64.f : 0.f;
-    UIEdgeInsets insets = UIEdgeInsetsMake(valueX, 0.f, 0.f, 0.f);
-    self.tableView.contentInset = insets;
-    self.tableView.scrollIndicatorInsets = insets;
-}
+//- (void)viewDidLayoutSubviews
+//{
+//    [super viewDidLayoutSubviews];
+//    
+//    CGFloat valueX = CGRectGetMinY(self.view.frame) <= 0.f ? 64.f : 0.f;
+//    UIEdgeInsets insets = UIEdgeInsetsMake(valueX, 0.f, 0.f, 0.f);
+//    self.tableView.contentInset = insets;
+//    self.tableView.scrollIndicatorInsets = insets;
+//}
 
 #pragma mark - Public
 
@@ -96,43 +97,8 @@
 #pragma mark - Private
 - (void)setupTableView
 {
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero];
-    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [self.view addSubview:self.tableView];
-    NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:self.tableView
-                                                           attribute:NSLayoutAttributeTop
-                                                           relatedBy:NSLayoutRelationEqual
-                                                              toItem:self.view
-                                                           attribute:NSLayoutAttributeTop
-                                                          multiplier:1.0
-                                                            constant:0.0];
-
-    NSLayoutConstraint *leading = [NSLayoutConstraint constraintWithItem:self.tableView
-                                                               attribute:NSLayoutAttributeLeading
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.view
-                                                               attribute:NSLayoutAttributeLeading
-                                                              multiplier:1.0
-                                                                constant:0.0];
-    
-    NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:self.tableView
-                                                              attribute:NSLayoutAttributeBottom
-                                                              relatedBy:NSLayoutRelationEqual
-                                                                 toItem:self.view
-                                                              attribute:NSLayoutAttributeBottom
-                                                             multiplier:1.0
-                                                               constant:0.0];
-    
-    NSLayoutConstraint *trailing = [NSLayoutConstraint constraintWithItem:self.tableView
-                                                                attribute:NSLayoutAttributeTrailing
-                                                                relatedBy:NSLayoutRelationEqual
-                                                                   toItem:self.view
-                                                                attribute:NSLayoutAttributeTrailing
-                                                               multiplier:1.0
-                                                                 constant:0.0];
-
-    [self.view addConstraints:@[top, leading, bottom, trailing]];
+//    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame];
+//    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     __weak __typeof(self) weakSelf = self;
     TableViewCellConfigureBlock configureCell = ^(UITableViewCell* cell, id<MCChildrenCollection> item, NSIndexPath *indexPath) {
@@ -238,7 +204,6 @@
 }
 
 #pragma mark - UITableViewDelegate
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.delegate childrenViewController:self didSelectChildIndex:[indexPath row]];

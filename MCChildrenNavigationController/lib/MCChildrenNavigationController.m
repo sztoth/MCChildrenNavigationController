@@ -53,7 +53,7 @@
  selectedNodeIndexPath:(NSIndexPath *)aSelectedNodeIndexPath
      selectedNodeBlock:(selectedNodeBlock)aSelectedNodeBlock
 {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [self initWithNibName:nil bundle:nil];
     if (self) {
         _rootNode = aRootNode;
         _selectedNodeIndexPath = aSelectedNodeIndexPath;
