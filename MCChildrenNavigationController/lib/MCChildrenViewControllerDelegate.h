@@ -21,19 +21,14 @@
 - (BOOL)childrenViewController:(MCChildrenViewController *)childrenViewController
         shouldSelectChildIndex:(NSInteger)childIndex;
 
-- (BOOL)childrenViewControllerShouldShowAllNodeSelectionButton:(MCChildrenViewController *)childrenViewController;
+- (BOOL)childrenViewControllerShouldShowAll:(MCChildrenViewController *)childrenViewController;
 
-- (BOOL)childrenViewControllerShouldSelectAllNodeSelectionButton:(MCChildrenViewController *)childrenViewController;
+- (BOOL)childrenViewControllerShouldSelectAll:(MCChildrenViewController *)childrenViewController;
+
 
 - (void)childrenViewController:(MCChildrenViewController *)childrenViewController
            didSelectChildIndex:(NSInteger)childIndex;
 
 - (void)childrenViewControllerDidSelectAll:(MCChildrenViewController *)childrenViewController;
-
-- (BOOL)childrenViewControllerShouldShowSpecialRootFeatureButton:(MCChildrenViewController *)childrenViewController;
-
-- (BOOL)childrenViewControllerShouldSelectSpecialRootFeatureButton:(MCChildrenViewController *)childrenViewController;
-
-- (void)childrenViewControllerDidSelectSpecialRootFeatureButton:(MCChildrenViewController *)childrenViewController;
 
 @end

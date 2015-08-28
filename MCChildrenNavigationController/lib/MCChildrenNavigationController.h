@@ -23,13 +23,11 @@ typedef NS_ENUM(NSInteger, MCChildrenNavigationControllerMaximumLevel) {
 };
 
 typedef void (^selectedNodeBlock)(id<MCChildrenCollection> node, NSIndexPath *indexPath);
-typedef void (^selectedSpecialRootFeatureBlock)();
 typedef void (^configureChildrenViewControllerBlock)(UIViewController *childrenViewController);
 typedef void (^configureEmptyViewControllerBlock)(UIViewController *emptyViewController);
 typedef void (^configureTableViewBlock)(UITableView *tableView, id<MCChildrenCollection> node);
 typedef void (^configureTableViewCellBlock)(UITableViewCell *cell);
-typedef void (^configureAllNodeSelectionButtonBlock)(MCTableHeaderViewButton *button, BOOL isSelected);
-typedef void (^configureSpecialRootFeatureButtonBlock)(MCTableHeaderViewButton *button, BOOL isSelected);
+typedef void (^configureTableHeaderViewBlock)(MCTableHeaderViewButton *button, BOOL isSelected);
 
 @interface MCChildrenNavigationController : UINavigationController <MCChildrenViewControllerDelegate>
 
@@ -37,17 +35,13 @@ typedef void (^configureSpecialRootFeatureButtonBlock)(MCTableHeaderViewButton *
 @property (nonatomic, strong) NSIndexPath *selectedNodeIndexPath;
 @property (nonatomic, assign) MCChildrenNavigationControllerSelectionMode selectionMode;
 @property (nonatomic, assign) NSInteger maximumLevel;
-@property (nonatomic, assign, getter=isSpecialRootFeatureEnabled) BOOL specialRootFeatureEnabled;
-@property (nonatomic, assign, getter=isSpecialRootFeatureSelected) BOOL specialRootFeatureSelected;
 
 @property (nonatomic, copy) selectedNodeBlock selectedNodeBlock;
-@property (nonatomic, copy) selectedSpecialRootFeatureBlock selectedSpecialRootFeatureBlock;
 @property (nonatomic, copy) configureChildrenViewControllerBlock configureChildrenViewControllerBlock;
 @property (nonatomic, copy) configureEmptyViewControllerBlock configureEmptyViewControllerBlock;
 @property (nonatomic, copy) configureTableViewBlock configureTableViewBlock;
 @property (nonatomic, copy) configureTableViewCellBlock configureTableViewCellBlock;
-@property (nonatomic, copy) configureAllNodeSelectionButtonBlock configureAllNodeSelectionButtonBlock;
-@property (nonatomic, copy) configureSpecialRootFeatureButtonBlock configureSpecialRootFeatureButtonBlock;
+@property (nonatomic, copy) configureTableHeaderViewBlock configureTableHeaderViewBlock;
 
 - (id)initWithRootNode:(id<MCChildrenCollection>)aRootNode;
 - (id)initWithRootNode:(id<MCChildrenCollection>)aRootNode
@@ -59,4 +53,7 @@ typedef void (^configureSpecialRootFeatureButtonBlock)(MCTableHeaderViewButton *
 - (void)highlightSelectedNodeAnimated:(BOOL)animated;
 - (void)unhighlightSelectedNodeAnimated:(BOOL)animated;
 
+- (void)changeChildrensCancelTitle:(NSString *)cancelTitle;
+
 @end
+

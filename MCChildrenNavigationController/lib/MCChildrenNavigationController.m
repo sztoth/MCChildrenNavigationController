@@ -12,6 +12,7 @@
 
 @interface MCChildrenNavigationController ()
 @property (strong, nonatomic) id<MCChildrenCollection> selectedNodeCache;
+@property (strong, nonatomic) NSString *cancelButtonTitle;
 @end
 
 @implementation MCChildrenNavigationController
@@ -32,7 +33,7 @@
         _configureEmptyViewControllerBlock = ^void(UIViewController *emptyViewController){};
         _configureTableViewBlock = ^void(UITableView *tableView, id<MCChildrenCollection> node){};
         _configureTableViewCellBlock = ^void(UITableViewCell *cell){};
-        _configureAllNodeSelectionButtonBlock = ^void(MCTableHeaderViewButton *button, BOOL isSelected){};
+        _configureTableHeaderViewBlock = ^void(MCTableHeaderViewButton *button, BOOL isSelected){};
     }
     return self;
 }
@@ -52,7 +53,7 @@
  selectedNodeIndexPath:(NSIndexPath *)aSelectedNodeIndexPath
      selectedNodeBlock:(selectedNodeBlock)aSelectedNodeBlock
 {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [self initWithNibName:nil bundle:nil];
     if (self) {
         _rootNode = aRootNode;
         _selectedNodeIndexPath = aSelectedNodeIndexPath;
@@ -109,6 +110,7 @@
 - (void)pushEmptyViewController
 {
     MCEmptyViewController *emptyViewController = [[MCEmptyViewController alloc] init];
+    [emptyViewController changeCancelTitle:self.cancelButtonTitle];
     self.configureEmptyViewControllerBlock(emptyViewController);
 
     self.viewControllers = @[emptyViewController];
@@ -123,6 +125,7 @@
         [self pushChildrenViewControllerForRootNode];
     }
 }
+
 
 - (MCChildrenViewController *)pushChildrenViewControllerForRootNode
 {
@@ -147,6 +150,7 @@
     }
 }
 
+
 - (MCChildrenViewController *)pushChildrenViewControllerForNode:(id<MCChildrenCollection>)node
                                     level:(NSInteger)level
                                     index:(NSInteger)index
@@ -156,10 +160,10 @@
         [[MCChildrenViewController alloc] initWithNode:node level:level index:index];
 
     childrenViewController.delegate = self;
+    [childrenViewController changeCancelTitle:self.cancelButtonTitle];
     childrenViewController.configureTableViewBlock = self.configureTableViewBlock;
     childrenViewController.configureTableViewCellBlock = self.configureTableViewCellBlock;
-    childrenViewController.configureAllNodeSelectionButtonBlock = self.configureAllNodeSelectionButtonBlock;
-    childrenViewController.configureSpecialRootFeatureButtonBlock = self.configureSpecialRootFeatureButtonBlock;
+    childrenViewController.configureTableHeaderViewBlock = self.configureTableHeaderViewBlock;
     self.configureChildrenViewControllerBlock(childrenViewController);
     
     [self pushViewController:childrenViewController animated:animated];
@@ -197,8 +201,8 @@
     return indexPath;
 }
 
-#pragma mark - MCChildrenViewControllerDelegate
 
+#pragma mark - MCChildrenViewControllerDelegate
 - (BOOL)childrenViewController:(MCChildrenViewController *)childrenViewController
        canNavigateToChildIndex:(NSInteger)childIndex
 {
@@ -230,18 +234,19 @@
         [self childrenViewController:childrenViewController canSelectChildIndex:childIndex];
 }
 
-- (BOOL)childrenViewControllerShouldShowAllNodeSelectionButton:(MCChildrenViewController *)childrenViewController
+- (BOOL)childrenViewControllerShouldShowAll:(MCChildrenViewController *)childrenViewController
 {
     return (self.selectionMode == MCChildrenNavigationControllerSelectionModeAll) ||
         ((self.selectionMode == MCChildrenNavigationControllerSelectionModeNoRoot) &&
          (childrenViewController.level != 0));
 }
 
-- (BOOL)childrenViewControllerShouldSelectAllNodeSelectionButton:(MCChildrenViewController *)childrenViewController
+- (BOOL)childrenViewControllerShouldSelectAll:(MCChildrenViewController *)childrenViewController
 {
     return (childrenViewController.node == [self selectedNode]) &&
-        [self childrenViewControllerShouldShowAllNodeSelectionButton:childrenViewController];
+        [self childrenViewControllerShouldShowAll:childrenViewController];
 }
+
 
 - (void)childrenViewController:(MCChildrenViewController *)childrenViewController
            didSelectChildIndex:(NSInteger)childIndex
@@ -256,7 +261,6 @@
         NSInteger level = childrenViewController.level + 1;
         [self pushChildrenViewControllerForNode:node level:level index:childIndex animated:YES];
     }
-    self.specialRootFeatureSelected = NO;
 }
 
 - (void)childrenViewControllerDidSelectAll:(MCChildrenViewController *)childrenViewController
@@ -265,25 +269,26 @@
 
     self.selectedNodeIndexPath = [self indexPathForCurrentNode];
     self.selectedNodeBlock(node, self.selectedNodeIndexPath);
-    self.specialRootFeatureSelected = NO;
     return;
+
 }
 
-- (BOOL)childrenViewControllerShouldShowSpecialRootFeatureButton:(MCChildrenViewController *)childrenViewController
-{
-    return self.isSpecialRootFeatureEnabled && childrenViewController.level == 0;
-}
+#pragma mark - Changing the cancel title
 
-- (BOOL)childrenViewControllerShouldSelectSpecialRootFeatureButton:(MCChildrenViewController *)childrenViewController
+- (void)changeChildrensCancelTitle:(NSString *)cancelTitle
 {
-    return self.isSpecialRootFeatureEnabled && self.isSpecialRootFeatureSelected;
-}
-
-- (void)childrenViewControllerDidSelectSpecialRootFeatureButton:(MCChildrenViewController *)childrenViewController
-{
-    self.specialRootFeatureSelected = YES;
-    self.selectedNodeIndexPath = nil;
-    self.selectedSpecialRootFeatureBlock();
+    self.cancelButtonTitle = cancelTitle;
+    
+    for (id viewController in self.viewControllers) {
+        if ([viewController isKindOfClass:[MCChildrenViewController class]]) {
+            MCChildrenViewController *vc = (MCChildrenViewController *)viewController;
+            [vc changeCancelTitle:self.cancelButtonTitle];
+        }
+        else if ([viewController isKindOfClass:[MCEmptyViewController class]]) {
+            MCEmptyViewController *vc = (MCEmptyViewController *)viewController;
+            [vc changeCancelTitle:self.cancelButtonTitle];
+        }
+    }
 }
 
 @end

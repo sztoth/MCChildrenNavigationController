@@ -13,12 +13,11 @@
 
 typedef void (^configureTableViewBlock)(UITableView *tableView, id<MCChildrenCollection> node);
 typedef void (^configureTableViewCellBlock)(UITableViewCell *cell);
-typedef void (^configureAllNodeSelectionButtonBlock)(MCTableHeaderViewButton *button, BOOL isSelected);
-typedef void (^configureSpecialRootFeatureButtonBlock)(MCTableHeaderViewButton *button, BOOL isSelected);
+typedef void (^configureTableHeaderViewBlock)(MCTableHeaderViewButton *button, BOOL isSelected);
 
 @interface MCChildrenViewController : UIViewController <UITableViewDelegate>
 
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) id<MCChildrenCollection> node;
 @property (nonatomic, assign) NSInteger level;
 @property (nonatomic, assign) NSInteger index;
@@ -27,12 +26,12 @@ typedef void (^configureSpecialRootFeatureButtonBlock)(MCTableHeaderViewButton *
 
 @property (nonatomic, copy) configureTableViewBlock configureTableViewBlock;
 @property (nonatomic, copy) configureTableViewCellBlock configureTableViewCellBlock;
-@property (nonatomic, copy) configureAllNodeSelectionButtonBlock configureAllNodeSelectionButtonBlock;
-@property (nonatomic, copy) configureSpecialRootFeatureButtonBlock configureSpecialRootFeatureButtonBlock;
+@property (nonatomic, copy) configureTableHeaderViewBlock configureTableHeaderViewBlock;
 
 - (id)initWithNode:(id<MCChildrenCollection>)aNode level:(NSInteger)aLevel index:(NSInteger)anIndex;
 
 - (void)selectRowInTableViewAnimated:(BOOL)animated;
 - (void)deselectRowInTableViewAnimated:(BOOL)animated;
+- (void)changeCancelTitle:(NSString *)cancelTitle;
 
 @end
