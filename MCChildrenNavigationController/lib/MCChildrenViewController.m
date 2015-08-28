@@ -45,7 +45,6 @@
     [super viewDidLoad];
     [self setupTableView];
     [self setupTableHeaderView];
-//    [self.view addSubview:self.tableView];
 
     [self setupNavigationItems];
 }
@@ -53,23 +52,26 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-//    CGRect frame = self.view.frame;
-//    frame.origin.x = 0.f;
-//    self.view.frame = frame;
-    
     [self deselectRowInTableViewAnimated:animated];
 }
 
-//- (void)viewDidLayoutSubviews
-//{
-//    [super viewDidLayoutSubviews];
-//    
-//    CGFloat valueX = CGRectGetMinY(self.view.frame) <= 0.f ? 64.f : 0.f;
-//    UIEdgeInsets insets = UIEdgeInsetsMake(valueX, 0.f, 0.f, 0.f);
-//    self.tableView.contentInset = insets;
-//    self.tableView.scrollIndicatorInsets = insets;
-//}
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    CGFloat systemVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if (systemVersion < 8.f) {
+        UINavigationBar *navBar = self.navigationController.navigationBar;
+        if (navBar) {
+            CGFloat verticalOffset = 64.f;
+            CGFloat valueX = CGRectGetMinY(self.view.frame) <= 0.f ? verticalOffset : 0.f;
+            
+            UIEdgeInsets insets = UIEdgeInsetsMake(valueX, 0.f, 0.f, 0.f);
+            self.tableView.contentInset = insets;
+            self.tableView.scrollIndicatorInsets = insets;
+        }
+    }
+}
 
 #pragma mark - Public
 
@@ -97,9 +99,6 @@
 #pragma mark - Private
 - (void)setupTableView
 {
-//    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame];
-//    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    
     __weak __typeof(self) weakSelf = self;
     TableViewCellConfigureBlock configureCell = ^(UITableViewCell* cell, id<MCChildrenCollection> item, NSIndexPath *indexPath) {
         cell.textLabel.text = item.label;
