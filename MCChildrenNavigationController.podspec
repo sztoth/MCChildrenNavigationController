@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MCChildrenNavigationController"
-  s.version      = "0.0.10"
+  s.version      = "0.1.0"
   s.summary      = "MCChildrenNavigationController displays tree structures in a navigation interface"
 
   s.description  = <<-DESC
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.license      = 'MIT'
   s.author       = { "Miguel Cabeça" => "miguel.cabeca@gmail.com" }
   s.platform     = :ios, '7.0'
-  s.source       = { :git => "https://github.com/cabeca/MCChildrenNavigationController.git", :tag => s.version }
+  s.source       = { :git => "https://github.com/sztoth/MCChildrenNavigationController.git", :tag => s.version }
   s.source_files = 'MCChildrenNavigationController/lib/*.{h,m}'
   s.resources    = 'MCChildrenNavigationController/asset/*.xib'
   s.requires_arc = true
